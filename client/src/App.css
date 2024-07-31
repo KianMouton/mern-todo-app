@@ -1,0 +1,41 @@
+:root {
+  --text: white;
+  --background: rgb(47, 45, 45);
+}
+
+* {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.todo {
+  display: flex;
+  background-color: rgb(197, 92, 12);
+  padding: 0.5em 0.5em 0.5em;
+  margin: 10px;
+  border-radius: 15px;
+  justify-content: space-between;
+}
+
+.checkBtn {
+  border-radius: 10px;
+}
+
+.todoText {
+  background-color: rgb(197, 92, 12);
+}
+
+.deleteBtn {
+  border-radius: 10px;
+}

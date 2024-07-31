@@ -7,7 +7,7 @@ function App() {
   useEffect(() => {
     getTodos();
 
-  }, [todos]);
+  }, []);
 
   const BASE_URL = 'http://localhost:3001'
 
@@ -17,6 +17,20 @@ function App() {
      .then(data => setTodos(data))
      .catch(err => console.error("error", err))
   };
+
+  const deleteTodo = async (id) => {
+
+    try {
+      await fetch(BASE_URL + '/todos/delete/' + id, {
+        method: 'DELETE',
+      })
+
+     setTodos((prevTodos) => prevTodos.filter(todo => todo._id !== id));
+    }
+    catch(err) {
+      console.error("error", err)
+    }
+  }
 
   return (
     <div className="App">
@@ -29,7 +43,7 @@ function App() {
         return <div className="todo" key={todo._id}>
                  <input className="checkbtn" type="checkbox" checked={todo.completed} disabled />
                  <p className="todoText">{todo.text}</p>
-                 <button className="deleteBtn">Delete</button>
+                 <button onClick={() => deleteTodo(todo._id)} className="deleteBtn">Delete</button>
                </div>
       })}
     </div>

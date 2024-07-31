@@ -49,6 +49,19 @@ app.post('/todos/new', async (req, res) => {
     }
 });
 
+app.delete('/todos/delete/:id', async (req, res) => {
+    const id = req.params.id;
+    
+    try {
+        const deleted = await Todo.findByIdAndDelete(id);
+        res.json({ message: 'Todo deleted successfully', deleted: deleted });
+    }
+    catch(err) {
+        console.error('Unable to delete todo', err);
+        res.status(500).send('Unable to delete todo');
+    }
+});
+
 //port
 app.listen(
     Port, 

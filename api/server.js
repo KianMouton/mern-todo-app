@@ -62,6 +62,21 @@ app.delete('/todos/delete/:id', async (req, res) => {
     }
 });
 
+app.post('/todos/check/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const clicked = await Todo.findById(id);
+        if (!clicked) return res.status(404).send('Todo not found');
+        console.log(clicked);
+        clicked.completed = !clicked.completed;
+        await clicked.save();
+        res.json({ message: 'Todo checked successfully', checked: clicked });
+    }
+    catch(err) {
+        console.log('Unable to check todo', err);
+    }
+})
+
 //port
 app.listen(
     Port, 

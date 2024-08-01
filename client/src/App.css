@@ -39,3 +39,7 @@ form {
 .deleteBtn {
   border-radius: 10px;
 }
+
+.checked {
+  text-decoration: line-through;
+}

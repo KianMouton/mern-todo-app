@@ -35,7 +35,7 @@ function App() {
   return (
     <div className="App">
       <h1>Todo</h1>
-      <form action='http://localhost:3001/todos/new' method='post'>
+      <form onSubmit={getTodos()} action='http://localhost:3001/todos/new' method='post'>
       <input type='text' name="text" placeholder="enter your note" required/>
       <button type='submit'>Add Note</button>
       </form>

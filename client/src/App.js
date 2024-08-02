@@ -3,11 +3,12 @@ import './App.css';
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [checkedTodos, setCheckedTodos] = useState([]);
 
   useEffect(() => {
     getTodos();
 
-  }, []);
+  }, [checkedTodos]);
 
   const BASE_URL = 'http://localhost:3001'
 
@@ -32,31 +33,29 @@ function App() {
     }
   }
 
-  const checkTodo = async (id) => {
-    
+  const handleCheck = async (e, id) => {
+    //send the check to the database
     try {
-      await fetch(BASE_URL + '/todos/check/' + id, {
-        method: 'POST',
-      })
+      const response = (await fetch(BASE_URL + '/todos/check/' + id, { method: 'POST' }));
+      const toCheck = await response.json();
+      const text = e.target.nextElementSibling;
+      if (toCheck.checked.completed) {
+        text.classList.add('checked');
+      } else {
+        text.classList.remove('checked');
+      }
     }
     catch(err) {
-      console.error("error", err)
-    }
-  }
-
-  const handleCheck =(e) => {
-    const checkBox = e.target;
-    if (checkBox.checked) {
-      checkBox.nextElementSibling.classList.add('checked');
-    }
-    else {
-      checkBox.nextElementSibling.classList.remove('checked');
+      console.error('could not send data to the server');
+      alert('could not send data the data to the server');
     }
     
-    const pElement = checkBox.nextElementSibling;
-    console.log(pElement);
-
-    getTodos();
+    
+    if (checkedTodos.includes(id)) {
+      setCheckedTodos(checkedTodos.filter(todoId => todoId !== id));
+    } else {
+      setCheckedTodos([...checkedTodos, id]);
+    }
   } 
 
   return (
@@ -68,15 +67,29 @@ function App() {
       </form>
       {todos.map((todo) => {
         return <div className="todo" key={todo._id}>
-                 <input onClick={() => checkTodo(todo._id)}
-                  onChange={handleCheck}
+                 <input
+                  onClick={(e) => handleCheck(e, todo._id)}
                   className="checkbtn"
                   type="checkbox"
                   checked={todo.completed}/>
-                 <p className="todoText">{todo.text}</p>
-                 <button onClick={() => deleteTodo(todo._id)} className="deleteBtn">Delete</button>
+                  <p className="todoText">{todo.text}</p>
+                  <button onClick={() => deleteTodo(todo._id)} className="deleteBtn">Delete</button>
                </div>
       })}
+      <div className='completed'>
+        <h2>Completed</h2>
+        {todos.filter((todo) => todo.completed === true).map((todo) => {
+          return <div className="todo" key={todo._id}>
+            <input
+                onClick={() => handleCheck(todo._id)}
+                className="checkbtn"
+                type="checkbox"
+                checked={todo.completed}/>
+                <p className="todoText">{todo.text}</p>
+                <button onClick={() => deleteTodo(todo._id)} className="deleteBtn">Delete</button>
+          </div> 
+        })}
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@
   color: var(--text);
 }
 
-h1 {
+h1, h2 {
   text-align: center;
 }
 
@@ -21,19 +21,30 @@ form {
 
 .todo {
   display: flex;
-  background-color: rgb(197, 92, 12);
+  background-color: rgb(10, 138, 70);
   padding: 0.5em 0.5em 0.5em;
   margin: 10px;
   border-radius: 15px;
   justify-content: space-between;
+  transition: 0.3s ease-in-out;
 }
 
-.checkBtn {
-  border-radius: 10px;
+.todo:hover {
+  background-color: rgb(59, 119, 33);
+  .todoText {
+    background-color: rgb(59, 119, 33);
+  }
+}
+
+.checkbtn {
+  transform: scale(1.8); 
+  margin: 10px; 
+  cursor: pointer;
 }
 
 .todoText {
-  background-color: rgb(197, 92, 12);
+  background-color: rgb(10, 138, 70);
+  transition: 0.3s ease-in-out;
 }
 
 .deleteBtn {
@@ -42,4 +53,12 @@ form {
 
 .checked {
   text-decoration: line-through;
+}
+
+@media (min-width: 480px) {
+  .todo {
+    background-color: rgb(10, 138, 70);
+    max-width: 400px;
+    margin: 10px auto;
+  }
 }

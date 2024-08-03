@@ -8,6 +8,11 @@
   color: var(--text);
 }
 
+.App {
+  display: flex;
+  flex-direction: column;
+}
+
 h1, h2 {
   text-align: center;
 }
@@ -19,6 +24,31 @@ form {
   margin-bottom: 20px;
 }
 
+/* animmation for adding new todos */
+@keyframes addTodo {
+  0% {
+      opacity: 0;
+      transform: translatex(-100px);
+      filter: blur(3px)
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+.todo {
+  animation-name: addTodo;
+  animation-duration: 1s;
+  transition: all 0.3s  ease-in-out;
+}
+
+.completed .todo {
+  background-color: rgb(26, 157, 32);
+  .todoText {
+    background-color: rgb(26, 157, 32);
+  }
+}
+
 .todo {
   display: flex;
   background-color: rgb(10, 138, 70);
@@ -26,13 +56,13 @@ form {
   margin: 10px;
   border-radius: 15px;
   justify-content: space-between;
-  transition: 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .todo:hover {
-  background-color: rgb(59, 119, 33);
+  background-color: rgb(46, 117, 16);
   .todoText {
-    background-color: rgb(59, 119, 33);
+    background-color: rgb(46, 117, 16);
   }
 }
 
@@ -60,5 +90,25 @@ form {
     background-color: rgb(10, 138, 70);
     max-width: 400px;
     margin: 10px auto;
+  }
+
+}
+
+@media (min-width: 800px) {
+  .todo {
+    max-width: 600px;
+    margin: 10px auto;
+  }
+
+  .App {
+    flex-direction: row;
+  }
+
+  .todos {
+    width: 90%;
+  }
+
+  .completed {
+    width: 50%;
   }
 }

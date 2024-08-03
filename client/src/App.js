@@ -50,7 +50,6 @@ function App() {
       alert('could not send data the data to the server');
     }
     
-    
     if (checkedTodos.includes(id)) {
       setCheckedTodos(checkedTodos.filter(todoId => todoId !== id));
     } else {
@@ -60,6 +59,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className='todos'>
       <h1>Todo</h1>
       <form onSubmit={getTodos} action='http://localhost:3001/todos/new' method='post'>
       <input type='text' name="text" placeholder="enter your note" required/>
@@ -76,6 +76,7 @@ function App() {
                   <button onClick={() => deleteTodo(todo._id)} className="deleteBtn">Delete</button>
                </div>
       })}
+      </div>
       <div className='completed'>
         <h2>Completed</h2>
         {todos.filter((todo) => todo.completed === true).map((todo) => {

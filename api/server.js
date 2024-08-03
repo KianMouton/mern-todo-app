@@ -67,7 +67,6 @@ app.post('/todos/check/:id', async (req, res) => {
     try {
         const clicked = await Todo.findById(id);
         if (!clicked) return res.status(404).send('Todo not found');
-        console.log(clicked);
         clicked.completed = !clicked.completed;
         await clicked.save();
         res.json({ message: 'Todo checked successfully', checked: clicked });

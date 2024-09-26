@@ -17,6 +17,8 @@ mongoose.connect(process.env.DB_URI, {
     console.log('Connected to MongoDB');
 }).catch(err => console.error("error connecting to the database", err));
 
+//User model
+const User = require('./User.js');
 //Todo model
 const Todo = require('./Todo.js');
 
@@ -78,7 +80,22 @@ app.post('/todos/check/:id', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
-})
+
+    if (!username ||!password) {
+        console.log(req.body);
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+    if (await User.findOne({ username })) {
+        return res.status(400).json({ message: 'Username already exists' });
+    }
+    else {
+        const user = new User({ username, password });
+        await user.save();
+        res.json({ message: 'User registered successfully' });
+        console.log(user);
+    }
+});
 
 //port
 app.listen(

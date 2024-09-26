@@ -16,22 +16,6 @@ const todoSchema = new Schema({
     }
 })
 
-const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    username: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    todos: [todoSchema]
-})
-
-//user Model
-const user = mongoose.model('User', userSchema);
-
 // Todo model
 const Todo = mongoose.model('Todo', todoSchema);
 

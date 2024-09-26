@@ -8,6 +8,37 @@
   color: var(--text);
 }
 
+.login {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 400px;
+  padding: 20px;
+  background-color: rgb(67, 67, 67);
+  border-radius: 5px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+.login form p, button {
+  background-color: transparent;
+}
+
+.user-and-pass {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  gap: 15px;
+}
+
 .App {
   display: flex;
   flex-direction: column;

@@ -76,6 +76,10 @@ app.post('/todos/check/:id', async (req, res) => {
     }
 })
 
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+})
+
 //port
 app.listen(
     Port, 

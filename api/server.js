@@ -3,6 +3,7 @@ const Port = 3001;
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
@@ -92,8 +93,8 @@ app.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'Username already exists' });
     }
 
-    //hashed the password to store in the database
-    const hashedPassword = await bcrypt.hash(password, 'sha256');
+    //hash the password to store in the database
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({ username, hashedPassword });
     await user.save();
@@ -111,8 +112,13 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    const user = users.findOne({ username });
-    if (!user) return res.status(401).json({ message: 'Invalid username or password' });
+    try {
+        const user = user.findOne({ username });
+    }
+    catch(err) {
+        console.error('Unable to find user', err);
+        return res.status(500).send('Unable to find user');
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });

@@ -2,11 +2,13 @@ const express = require('express');
 const Port = 3001;
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }))
 
@@ -89,12 +91,36 @@ app.post('/register', async (req, res) => {
     if (await User.findOne({ username })) {
         return res.status(400).json({ message: 'Username already exists' });
     }
-    else {
-        const user = new User({ username, password });
-        await user.save();
-        res.json({ message: 'User registered successfully' });
-        console.log(user);
-    }
+
+    //hashed the password to store in the database
+    const hashedPassword = await bcrypt.hash(password, 'sha256');
+
+    const user = new User({ username, hashedPassword });
+    await user.save();
+
+    const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
+
+    res.cookie('token', token, 
+        { httpOnly: true }
+    )
+    res.json({ message: 'User registered successfully' });
+    console.log(user);
+    
+});
+
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    const user = users.findOne({ username });
+    if (!user) return res.status(401).json({ message: 'Invalid username or password' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
+
+    const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
+
+    res.cookie('token', token, { httpOnly: true});
+    res.json({ message: 'Login successful' });
 });
 
 //port

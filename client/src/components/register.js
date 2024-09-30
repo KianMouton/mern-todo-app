@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     const BASE_URL = 'http://localhost:3001'
 
@@ -23,6 +24,7 @@ const Register = () => {
 
         if (response.ok) {
             setMessage(data.message);
+            navigate("/notes");
         } else {
             setMessage(data.message);
         }

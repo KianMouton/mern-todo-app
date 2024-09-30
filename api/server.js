@@ -3,6 +3,7 @@ const Port = 3001;
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 bcrypt = require('bcrypt');
 require('dotenv').config();
 
@@ -81,6 +82,7 @@ app.post('/todos/check/:id', async (req, res) => {
     }
 })
 
+// register endpoint
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
 
@@ -89,6 +91,7 @@ app.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'Username and password are required' });
     }
 
+    // check if username already exists
     if (await User.findOne({ username })) {
         return res.status(400).json({ message: 'Username already exists' });
     }
@@ -96,7 +99,7 @@ app.post('/register', async (req, res) => {
     //hash the password to store in the database
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ username, hashedPassword });
+    const user = new User({ username, password: hashedPassword });
     await user.save();
 
     const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
@@ -113,20 +116,26 @@ app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const user = user.findOne({ username });
+        const user = await User.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+            
+        const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
+
+        res.cookie('token', token, { httpOnly: true});
+        res.json({ message: 'Login successful' });
     }
     catch(err) {
-        console.error('Unable to find user', err);
-        return res.status(500).send('Unable to find user');
+        console.error('Unable to login user', err);
+        res.status(500).send('Unable to login user');
     }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
-
-    const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
-
-    res.cookie('token', token, { httpOnly: true});
-    res.json({ message: 'Login successful' });
 });
 
 //port

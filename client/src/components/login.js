@@ -6,10 +6,12 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    const BASE_URL = 'http://localhost:3001'
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
-        const response = await fetch('/login', {
+        const response = await fetch( BASE_URL + '/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,7 +22,7 @@ const Login = () => {
         if (response.ok) {
             const data = await response.json();
             console.log(data.message); 
-            navigate("/notes");
+            navigate("./notes");
         } else {
             const errorData = await response.json();
             alert(errorData.message); 
@@ -30,12 +32,12 @@ const Login = () => {
     return (
         <div className='login'>
             <h1>Login</h1>
-            <form >
+            <form onSubmit={handleLogin}>
                 <div className='user-and-pass'>
                 <input type='text' name="username" placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)} required/>
                 <input type='password' name="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
                 </div>
-                <button onSubmit={handleLogin} type='submit'>Login</button>
+                <button type='submit'>Login</button>
                 <p>don't have a account?</p>
                 <Link to='/register'>
                 <button>Register</button>

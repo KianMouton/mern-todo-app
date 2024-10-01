@@ -22,7 +22,7 @@ const Login = () => {
         if (response.ok) {
             const data = await response.json();
             console.log(data.message); 
-            navigate("./notes");
+            navigate('./notes');
         } else {
             const errorData = await response.json();
             alert(errorData.message); 
@@ -40,7 +40,7 @@ const Login = () => {
                 <button type='submit'>Login</button>
                 <p>don't have a account?</p>
                 <Link to='/register'>
-                <button>Register</button>
+                <button type='button'>Register</button>
                 </Link>
             </form>
         </div>

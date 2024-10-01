@@ -26,9 +26,34 @@ const User = require('./User.js');
 //Todo model
 const Todo = require('./Todo.js');
 
-app.get('/todos', (req, res) => {
+app.get('/todos/:userId', (req, res) => {
+
+    const token = req.cookies.token;
+    const userId = req.params.userId;
+
+    if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({ message: "invalid token"})
+        } 
+    })
     //fetch all todos
-    Todo.find().then(todos => res.json(todos))
+    const userId = req.params.userId
+
+    User.findById(userId)
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            res.json(user.todos);
+        })
+        .catch(err => {
+            console.error('Unable to fetch todos', err);
+            res.status(500).send('Unable to fetch todos');
+        }) 
 })
 
 //post a todo
@@ -129,8 +154,11 @@ app.post('/login', async (req, res) => {
             
         const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
 
+        //set token and userId to cookies
         res.cookie('token', token, { httpOnly: true});
-        res.json({ message: 'Login successful' });
+        res.cookie("userId", user._id, { httpOnly: true });
+
+        res.json({ message: 'Login successful', userId: user._id });
     }
     catch(err) {
         console.error('Unable to login user', err);

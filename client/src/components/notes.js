@@ -12,7 +12,15 @@ function App() {
   const BASE_URL = 'http://localhost:3001'
 
   const getTodos = () => {
-     fetch(BASE_URL + '/todos')
+    const token = localStorage.getItem('token');
+
+     fetch(BASE_URL + '/todos', {
+      method: "GET",
+      headers: {
+        'Authorization': 'Bearer' + token,
+      },
+      credentials: 'include', 
+     })
      .then(res => res.json())
      .then(data => setTodos(data))
      .catch(err => console.error("error", err))

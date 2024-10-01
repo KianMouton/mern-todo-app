@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const todo = require('./Todo.js');
 
 const userSchema = new Schema({
     username: {
@@ -10,6 +11,10 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    todos: {
+        type: Schema.Types.ObjectId,
+        ref: 'Todo',
     }
 })
 

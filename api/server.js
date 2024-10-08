@@ -29,7 +29,16 @@ const User = require('./User.js');
 //Todo model
 const Todo = require('./Todo.js');
 
-app.get('/todos/:userId', (req, res) => {
+app.get('/user', async (req, res) => {
+
+    const userId = req.cookies.userId;
+    const user = await User.findById(userId);
+    const username = user.username
+
+    res.json(username);
+})
+
+app.get('/todos/', async (req, res) => {
 
     const token = req.cookies.token;
 
@@ -43,24 +52,26 @@ app.get('/todos/:userId', (req, res) => {
         } 
     })
     //fetch all todos
-    const userId = req.params.userId
+    const userId = req.cookies.userId;
+    try {
+        const user = await User.findById(userId).populate('todos');
 
-    User.findById(userId)
-        .then(user => {
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            res.json(user.todos);
-        })
-        .catch(err => {
-            console.error('Unable to fetch todos', err);
-            res.status(500).send('Unable to fetch todos');
-        }) 
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.json(user.todos);
+    } 
+    catch (err) {
+        console.error('Unable to fetch todos', err);
+        res.status(500).send('Unable to fetch todos');
+    }
 })
 
 //post a todo
 app.post('/todos/new', async (req, res) => {
     const text = req.body.text;
+    const userId = req.cookies.userId;
 
     if (!text) {
         console.log(req.body);
@@ -69,11 +80,18 @@ app.post('/todos/new', async (req, res) => {
 
     try {
         const newTodo = new Todo({
-            text: text
+            text: text,
+            creator: userId
         });
-    
+
         //saves the todo to the database
         await newTodo.save();
+
+        const user = await User.findById(userId);
+        user.todos.push(newTodo._id);
+        await user.save();
+    
+        console.log(newTodo);
     }
     catch(err) {
         console.log(req.body);

@@ -3,13 +3,29 @@ import { useState, useEffect } from 'react';
 function App() {
   const [todos, setTodos] = useState([]);
   const [checkedTodos, setCheckedTodos] = useState([]);
+  const [user, setUser] = useState();
 
   useEffect(() => {
+    getUser();
     getTodos();
 
   }, [checkedTodos]);
 
   const BASE_URL = 'http://localhost:3001'
+
+  const getUser = () => {
+    const token = localStorage.getItem('token');
+    fetch(BASE_URL + '/user', {
+      method: "GET",
+      headers: {
+        'Authorization': 'Bearer' + token,
+      },
+      credentials: 'include', 
+     })
+     .then(res => res.json())
+     .then(data => setUser(data))
+     .catch(err => console.error("error", err))
+  }
 
   const getTodos = () => {
     const token = localStorage.getItem('token');
@@ -67,6 +83,7 @@ function App() {
   return (
     <div className="App">
       <div className='todos'>
+      <p className='username'>logged in as {user}</p>
       <h1>Todo</h1>
       <form onSubmit={getTodos} action='http://localhost:3001/todos/new' method='post'>
       <input type='text' name="text" placeholder="enter your note" required/>

@@ -11,7 +11,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(express.urlencoded({ extended: true }))
 
 mongoose.connect(process.env.DB_URI, {
@@ -29,7 +32,6 @@ const Todo = require('./Todo.js');
 app.get('/todos/:userId', (req, res) => {
 
     const token = req.cookies.token;
-    const userId = req.params.userId;
 
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -128,10 +130,12 @@ app.post('/register', async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ username }, process.env.JWT_TOKEN, { expiresIn: "1h" });
+    console.log(token);
 
     res.cookie('token', token, 
         { httpOnly: true }
     )
+    res.cookie("userId", user._id, { httpOnly: true });
     res.json({ message: 'User registered successfully' });
     console.log(user);
     

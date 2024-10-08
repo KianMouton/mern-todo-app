@@ -12,10 +12,10 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    todos: {
-        type: Schema.Types.ObjectId,
-        ref: 'Todo',
-    }
+    todos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Todo" 
+    }]
 })
 
 //user Model

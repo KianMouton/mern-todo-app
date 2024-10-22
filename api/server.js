@@ -1,5 +1,5 @@
 const express = require('express');
-const Port = 3001;
+const Port = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');

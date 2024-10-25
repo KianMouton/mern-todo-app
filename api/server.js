@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://cautious-orchid-tadpole.glitch.me',
     credentials: true
 }));
 app.use(express.urlencoded({ extended: true }))
@@ -191,5 +191,5 @@ app.post('/login', async (req, res) => {
 //port
 app.listen(
     Port, 
-    () => { console.log(`Server is running on http://localhost:${Port}`);
+    () => { console.log(`Server is running on https://cautious-orchid-tadpole.glitch.me`);
 });

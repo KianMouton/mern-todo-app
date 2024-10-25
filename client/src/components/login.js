@@ -6,7 +6,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const BASE_URL = 'http://localhost:3001'
+    const BASE_URL = 'https://cautious-orchid-tadpole.glitch.me'
 
     const handleLogin = async (event) => {
         event.preventDefault();

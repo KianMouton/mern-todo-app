@@ -11,7 +11,7 @@ function App() {
 
   }, [checkedTodos]);
 
-  const BASE_URL = 'http://localhost:3001'
+  const BASE_URL = 'https://cautious-orchid-tadpole.glitch.me'
 
   const getUser = () => {
     const token = localStorage.getItem('token');
@@ -38,7 +38,9 @@ function App() {
       credentials: 'include', 
      })
      .then(res => res.json())
-     .then(data => setTodos(data))
+     .then(data => {
+      console.log(data)
+      setTodos(data)})
      .catch(err => console.error("error", err))
   };
 
@@ -85,7 +87,7 @@ function App() {
       <div className='todos'>
       <p className='username'>logged in as {user}</p>
       <h1>Todo</h1>
-      <form onSubmit={getTodos} action='http://localhost:3001/todos/new' method='post'>
+      <form onSubmit={getTodos} action='https://cautious-orchid-tadpole.glitch.me/todos/new' method='post'>
       <input type='text' name="text" placeholder="enter your note" required/>
       <button type='submit'>Add Note</button>
       </form>

@@ -7,7 +7,7 @@ const Register = () => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
-    const BASE_URL = 'http://localhost:3001'
+    const BASE_URL = 'https://cautious-orchid-tadpole.glitch.me'
 
     const handleSubmit = async (e) => {
         e.preventDefault();
